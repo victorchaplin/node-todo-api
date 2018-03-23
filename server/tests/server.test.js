@@ -117,17 +117,27 @@ describe('DELETE /todos/:id', () => {
                 }
 
                 Todo.findById(hexId).then((todo) => {
-                    expect(todo).toBeNull()
+                    expect(todo).toNotExist
                     done()
                 }).catch((error) => done(error))
             })
     })
 
-    // it('should return 404 if todo not found', (done) => {
+    it('should return 404 if todo not found', (done) => {
+        const id = new ObjectID()
 
-    // })
+        request(app)
+            .delete(`/todos/${id}`)
+            .expect(404)
+            .end(done)
+    })
 
-    // it('should return 404 if object id is invalid', (done) => {
+    it('should return 404 if object id is invalid', (done) => {
+        const id = 1234
 
-    // })
+        request(app)
+            .delete(`/todos/${id}`)
+            .expect(404)
+            .end(done)
+    })
 })
