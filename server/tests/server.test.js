@@ -156,20 +156,30 @@ describe('PATCH /todos/:id', () => {
             .patch(`/todos/${id}`)
             .send(updatedTodo)
             .expect(200)
-            .end((error, res) => {
-                if (error) {
-                    return done(error)
-                }
-                Todo.findById(id).then((todo) => {
-                    expect(todo.text).toEqual(updatedTodo.text)
-                    expect(todo.completed).toBeTruthy()
-                    expect(todo.completedAt).toBeA('number')
-                    done()
-                }).catch((error) => done(error))
+            .expect(res => {
+                expect(res.body.todo.text).toEqual(updatedTodo.text)
+                expect(res.body.todo.completed).toBeTruthy()
+                expect(typeof res.body.todo.completedAt).toBe('number')
             })
+            .end(done)
     })
 
     it('should clear completedAt when todo is not completed', (done) => {
+        const id = todos[1]._id.toHexString()
+        const updatedTodo = {
+            text: 'something else from test case',
+            completed: false
+        }
 
+        request(app)
+            .patch(`/todos/${id}`)
+            .send(updatedTodo)
+            .expect(200)
+            .expect(res => {
+                expect(res.body.todo.text).toEqual(updatedTodo.text)
+                expect(res.body.todo.completed).toBeFalsy()
+                expect(res.body.todo.completedAt).toBeNull()
+            })
+            .end(done)
     })
 })
