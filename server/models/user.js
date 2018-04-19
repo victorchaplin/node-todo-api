@@ -51,6 +51,26 @@ UserSchema.methods.generateAuthToken = function () {
     })
 }
 
+UserSchema.statics.findByToken = function (token) {
+    const User = this
+    
+    // variaveis declaradas sem inicializaçao sao undefined,
+    // nao pode ser const, pois const precisa de inicializaçao
+    let decoded
+
+    try {
+        decoded = jwt.verify(token, 'abc123')
+    } catch(error) {
+
+    }
+
+    return User.findOne({
+        '_id': decoded._id,
+        'tokens.token': token,
+        'tokens.access': 'auth'
+    })
+}
+
 const User = mongoose.model('User', UserSchema)
 
 module.exports = User
