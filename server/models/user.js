@@ -61,7 +61,7 @@ UserSchema.statics.findByToken = function (token) {
     try {
         decoded = jwt.verify(token, 'abc123')
     } catch(error) {
-
+        return Promise.reject()
     }
 
     return User.findOne({
@@ -73,7 +73,7 @@ UserSchema.statics.findByToken = function (token) {
 
 const User = mongoose.model('User', UserSchema)
 
-module.exports = User
+module.exports = {User}
 
 // validator: validator.isEmail
 // é o mesmo que
