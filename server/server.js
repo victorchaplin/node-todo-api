@@ -6,7 +6,7 @@ const bodyParser = require('body-parser')
 const {ObjectID} = require('mongodb')
 
 const mongoose = require('./db/mongoose')
-const Todo = require('./models/todo')
+const {Todo} = require('./models/todo')
 const {User} = require('./models/user')
 const {authenticate} = require('./middleware/authenticate')
 
@@ -115,4 +115,4 @@ app.listen(port, () => {
     console.log(`Started server on port ${port}`)
 })
 
-module.exports = app
+module.exports = {app}
