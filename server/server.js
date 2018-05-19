@@ -94,17 +94,17 @@ app.patch('/todos/:id', (req, res) => {
     })
 })
 
-app.post('/users', (req, res) => {
+app.post('/users', async (req, res) => {
     const body = _.pick(req.body, ['email', 'password'])
     const user = new User(body)
 
-    user.save().then(() => {
-        return user.generateAuthToken()
-    }).then((token) => {
+    try {
+        await user.save()
+        const token = user.generateAuthToken()
         res.header('x-auth', token).send(user)
-    }).catch((error) => {
+    } catch (error) {
         res.status(400).send(error)
-    })
+    }
 })
 
 app.get('/users/me', authenticate, (req, res) => {
